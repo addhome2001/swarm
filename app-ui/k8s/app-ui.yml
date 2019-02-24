@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-ui
+  template:
+    metadata:
+      labels:
+        app: app-ui
+    spec:
+      containers:
+      - name: app-ui
+        image: addhome2001/cluster-app-ui:0.2.8
+        ports:
+        - name: app-ui-port
+          containerPort: 80
+        volumeMounts:
+          - name: nginx-config-volumn
+            mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: nginx-config-volumn
+        configMap:
+          name: app-ui-nginx-config
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: app-ui-service
+spec:
+  type: NodePort
+  selector:
+    app: app-ui
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: app-ui-port

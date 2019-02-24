@@ -1,0 +1,21 @@
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #dadada;
+  font-size: x-large;
+}
+
+.operation-btn {
+  cursor: pointer;
+  border: 0;
+  font-size: larger;
+  border-radius: 50%;
+  background: none;
+  margin: 0 10px;
+}
+
+.operation-btn:focus {
+  outline: none;
+}
