@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    # rewrite path to / for nginx-ingress-controller
+    # rewrite path for nginx-ingress-controller with /
     nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
   rules:
