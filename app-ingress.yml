@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    # rewrite path to / for nginx-ingress-controller
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+spec:
+  rules:
+  - host: my-app.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-ui-service
+          servicePort: 80
+      - path: /api
+        backend:
+          serviceName: app-api-service
+          servicePort: 8000
+
