@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app-api
-        image: addhome2001/cluster-app-api:0.1.0
+        image: addhome2001/cluster-app-api:0.2.0
         ports:
         - name: app-api-port
           containerPort: 8000

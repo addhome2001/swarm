@@ -5,4 +5,4 @@ ENV FLASK_APP=app/__init__.py
 
 COPY . /app
 
-CMD [ "flask", "run", "--host=0.0.0.0", "--port=8000" ]
+CMD [ "gunicorn", "--workers=2", "--bind=0.0.0.0:8000", "app:app" ]
