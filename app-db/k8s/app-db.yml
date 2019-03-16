@@ -1,0 +1,98 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: app-db-pv-volumn
+spec:
+  storageClassName: local
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/my-app/data'
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: app-db-pv-claim
+spec:
+  storageClassName: local
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-db-secret
+type: Opaque
+data:
+    username: YWRkaG9tZTIwMDE=
+    password: cGFzc3dvcmQ=
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-db
+  template:
+    metadata:
+      labels:
+        app: app-db
+    spec:
+      volumes:
+      - name: app-db-pv-storage
+        persistentVolumeClaim:
+          claimName: app-db-pv-claim
+      - name: sql-scripts
+      containers:
+      - name: app-db
+        image: addhome2001/cluster-app-db:0.2.7
+        ports:
+        - name: app-db-port
+          containerPort: 3306
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: app-db-pv-storage
+        env:
+          - name: MYSQL_DATABASE
+            value: app-db
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: 'yes'
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: app-db-secret
+                key: username
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-db-secret
+                key: password
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: app-db-service
+spec:
+  type: NodePort
+  selector:
+    app: app-db
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: app-db-port

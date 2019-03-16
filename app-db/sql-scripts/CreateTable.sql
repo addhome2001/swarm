@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Counter (
+  id int PRIMARY KEY AUTO_INCREMENT,
+  counts int DEFAULT 0
+);
