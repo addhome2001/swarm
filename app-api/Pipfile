@@ -7,6 +7,8 @@ name = "pypi"
 flask = "*"
 flask-cors = "*"
 gunicorn = "*"
+flask-sqlalchemy = "*"
+mysqlclient = "*"
 
 [dev-packages]
 pylint = "*"
